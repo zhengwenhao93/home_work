@@ -1,6 +1,6 @@
 import request from '../utils/request'
 
-const login = (data) => {
+const Login = (data) => {
   return request({
     url: '/admin/login',
     method: 'POST',
@@ -8,6 +8,10 @@ const login = (data) => {
   })
 }
 
+const Postgetinfo = (params) => {
+  return request.post(`/admin/getinfo?token=${params}`, params);
+};
 export default {
-  login
+  Login,
+  Postgetinfo
 }

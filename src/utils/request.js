@@ -1,6 +1,8 @@
 import axios from 'axios'
-import store from '@/store'
-
+// import store from '@/store'
+// import {
+//   getItem
+// } from './storage'
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
   timeout: 5000
@@ -8,10 +10,10 @@ const service = axios.create({
 
 // 添加请求拦截器
 service.interceptors.request.use((config) => {
-  const token = store.getters.token
-  if (token) {
-    config.headers.token = token
-  }
+  // const token = getItem("token");
+  // if (token) {
+  //   config.headers.token = token
+  // }
   return config;
 }, (error) => {
   // 对请求错误做些什么
@@ -27,7 +29,6 @@ service.interceptors.response.use((response) => {
   return Promise.reject(error);
 })
 
-// 统一了传参处理
 const request = (options) => {
   if (options.method.toLowerCase() === 'get') {
     options.params = options.data || {}

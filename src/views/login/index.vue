@@ -21,6 +21,7 @@
           :model="loginForm"
           class="Form-text"
           label-width="70px"
+          ref="form"
         >
           <el-form-item prop="username">
             <el-input
@@ -42,7 +43,7 @@
             <el-button
               type="primary"
               :loading="loadingStatus"
-              @click="handleSubmitLogin"
+              @click="handleVerifyForm"
               class="button"
               >{{ loadingStatus ? '登录中...' : '立即登录' }}</el-button
             >
@@ -54,7 +55,9 @@
 </template>
 
 <script>
-// import UserApi from '@/api/user'
+import UserApi from '../../api/user'
+import { mapActions } from 'vuex'
+import { setItem } from '@/utils/storage.js'
 export default {
   data() {
     return {
@@ -82,21 +85,34 @@ export default {
   },
   created() {},
   methods: {
-    handleSubmitLogin() {
+    handleVerifyForm() {
       this.$refs.form.validate((valid) => {
-        if (!valid) return
-        this.loading = true
-        this.$store
-          .dispatch('login', this.loginForm)
-          .then(() => {
-            this.loading = false
-          })
-          .catch((err) => {
-            console.log(err)
-            this.loading = true
-          })
+        if (valid) {
+          this.handleSubmitLogin()
+        }
       })
-    }
+    },
+
+    async handleSubmitLogin() {
+      try {
+        const res = await UserApi.Login(this.loginForm)
+        this.token = res.data.data.token
+        // console.log(this.token)
+        setItem('token', this.token)
+        // console.log(res)
+        if (!res) return
+        this.$notify({ message: '登录成功', type: 'success' })
+        this.loadingStatus = true
+        await this.$router.push('/')
+      } catch (e) {
+        console.log(e)
+      } finally {
+        this.loadingStatus = false
+      }
+    },
+    ...mapActions({
+      login: 'user/Login'
+    })
   }
 }
 </script>

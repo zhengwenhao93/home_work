@@ -1,7 +1,29 @@
 <template>
-  <div>layout页面</div>
+  <div>
+
+  </div>
 </template>
 
-<script></script>
+<script>
+export default {
+  name: 'TissaBackmanaIndex',
 
-<style lang="scss" scoped></style>
+  data() {
+    return {
+
+    };
+  },
+
+  mounted() {
+
+  },
+
+  methods: {
+
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+
+</style>
