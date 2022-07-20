@@ -7,10 +7,12 @@ const Login = (data) => {
     data
   })
 }
-
-const Postgetinfo = (params) => {
-  return request.post(`/admin/getinfo?token=${params}`, params);
-};
+const Postgetinfo = () => {
+  return request({
+    url: '/admin/getinfo',
+    method: 'POST'
+  })
+}
 export default {
   Login,
   Postgetinfo

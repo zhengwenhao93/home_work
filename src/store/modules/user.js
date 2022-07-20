@@ -1,10 +1,12 @@
 import UserApi from '@/api/user'
-import { setItem, getItem } from '@/utils/storage'
+import {
+  setItem
+} from '@/utils/storage'
 
 export default {
   namespaced: true,
   state: {
-    token: getItem('token') || ''
+    token: ''
   },
   mutations: {
     setToken(state, token) {
@@ -13,10 +15,12 @@ export default {
     }
   },
   actions: {
-    async Login({ commit }, loginForm) {
-      const token = await UserApi.Login(loginForm)
-      commit('setToken', token)
-      return token
+    async login({
+      commit
+    }, loginForm) {
+      const res = await UserApi.Login(loginForm)
+      commit('setToken', res.data.data.token)
+      return res.data.data.token
     }
   }
 }

@@ -38,7 +38,6 @@
               v-model.trim="loginForm.password"
             ></el-input>
           </el-form-item>
-
           <el-form-item>
             <el-button
               type="primary"
@@ -55,21 +54,15 @@
 </template>
 
 <script>
-import UserApi from '../../api/user'
-import { mapActions } from 'vuex'
-import { setItem } from '@/utils/storage.js'
 export default {
   data() {
     return {
       // loading加载状态
       loadingStatus: false,
-      // 验证码路径
-
       // 登录参数
       loginForm: {
         username: 'admin',
-        password: 'admin',
-        token: ''
+        password: 'admin'
       },
       rules: {
         username: [
@@ -95,24 +88,17 @@ export default {
 
     async handleSubmitLogin() {
       try {
-        const res = await UserApi.Login(this.loginForm)
-        this.token = res.data.data.token
-        // console.log(this.token)
-        setItem('token', this.token)
-        // console.log(res)
+        this.loadingStatus = true
+        const res = await this.$store.dispatch('user/login', this.loginForm)
         if (!res) return
         this.$notify({ message: '登录成功', type: 'success' })
-        this.loadingStatus = true
         await this.$router.push('/')
       } catch (e) {
         console.log(e)
       } finally {
         this.loadingStatus = false
       }
-    },
-    ...mapActions({
-      login: 'user/Login'
-    })
+    }
   }
 }
 </script>
