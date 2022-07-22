@@ -26,8 +26,12 @@
                 >admin<i class="el-icon-arrow-down el-icon--right"></i
               ></span>
             </div>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>修改密码</el-dropdown-item>
+            <el-dropdown-menu @command="handleCommand" slot="dropdown">
+              <el-dropdown-item
+                @click="drawer = true"
+                label="rtl"
+                >修改密码</el-dropdown-item
+              >
               <el-dropdown-item>退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -36,33 +40,33 @@
     </el-header>
 
     <el-container>
+      <el-col style="width: 25%" :width="isCollapse ? '64px' : '100px'">
+        <el-menu
+          v-for="(item, index) in list"
+          :key="index"
+          class="el-menu-vertical-demo"
+          :collapse="isCollapse"
+          :collapse-transition="false"
+        >
+          <el-submenu index="1">
+            <template slot="title">
+              <i :class="'el-icon-' + item.icon"></i>
+              <span>{{ item.name }}</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item
+                index="1-1"
+                v-for="(item, index) in item.child"
+                :key="index"
+                ><i :class="'el-icon-' + item.child.icon"></i
+                >{{ item.name }}</el-menu-item
+              >
+            </el-menu-item-group>
+          </el-submenu>
+        </el-menu>
+      </el-col>
 
-        <el-col style="width: 25%" :width="isCollapse ? '64px' : '100px'" >
-          <el-menu
-            v-for="(item, index) in list"
-            :key="index"
-            class="el-menu-vertical-demo"
-            :collapse="isCollapse"
-            :collapse-transition="false"
-          >
-            <el-submenu index="1">
-              <template slot="title">
-                <i :class="'el-icon-' + item.icon"></i>
-                <span>{{ item.name }}</span>
-              </template>
-              <el-menu-item-group>
-                <el-menu-item
-                  index="1-1"
-                  v-for="(item, index) in list.child"
-                  :key="index"
-                  >{{ item.child.name }}</el-menu-item
-                >
-              </el-menu-item-group>
-            </el-submenu>
-          </el-menu>
-        </el-col>
-
-      <el-main style="width: 100%;">Main</el-main>
+      <el-main style="width: 100%">Main</el-main>
     </el-container>
   </el-container>
 </template>
@@ -80,7 +84,8 @@ export default {
       activeIndex: '1',
       isFullscreen: false,
       // 是否折叠
-      isCollapse: false
+      isCollapse: false,
+      drawer: false
     }
   },
 
@@ -105,6 +110,34 @@ export default {
     // 点击按钮切换菜单的折叠和展开
     toggleCollapse() {
       this.isCollapse = !this.isCollapse
+    },
+    // 退出登录的功能
+    async handleLogout() {
+      this.$confirm('是否要退出登录？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '退出成功!'
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
+    },
+    handleCommand(command) {
+      switch (command) {
+        case 'logout': {
+          this.handleLogout()
+          break
+        }
+      }
     }
   },
   created() {

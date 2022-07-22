@@ -1,6 +1,7 @@
 import UserApi from '@/api/user'
 import {
-  setItem
+  setItem,
+  removeItem
 } from '@/utils/storage'
 
 export default {
@@ -21,6 +22,14 @@ export default {
       const res = await UserApi.Login(loginForm)
       commit('setToken', res.data.data.token)
       return res.data.data.token
+    },
+    async logout({
+      commit
+    }) {
+      await UserApi.logout()
+      commit('setToken', '')
+      removeItem('token')
+      return true
     }
   }
 }
